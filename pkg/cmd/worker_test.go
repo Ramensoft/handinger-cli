@@ -15,7 +15,7 @@ func TestWorkersCreate(t *testing.T) {
 			t,
 			"--api-key", "string",
 			"workers", "create",
-			"--input", "x",
+			"--input", "What's the weather today in Barcelona?",
 			"--budget", "low",
 			"--stream=true",
 		)
@@ -24,7 +24,7 @@ func TestWorkersCreate(t *testing.T) {
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"input: x\n" +
+			"input: What's the weather today in Barcelona?\n" +
 			"budget: low\n" +
 			"stream: true\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
@@ -56,7 +56,7 @@ func TestWorkersContinue(t *testing.T) {
 			"--api-key", "string",
 			"workers", "continue",
 			"--worker-id", "t_org_123_w_01HZY2ZJQ8G7K42W2D7WF6V4GM",
-			"--input", "x",
+			"--input", "What's the weather today in Barcelona?",
 			"--budget", "low",
 			"--stream=true",
 		)
@@ -65,7 +65,7 @@ func TestWorkersContinue(t *testing.T) {
 	t.Run("piping data", func(t *testing.T) {
 		// Test piping YAML data over stdin
 		pipeData := []byte("" +
-			"input: x\n" +
+			"input: What's the weather today in Barcelona?\n" +
 			"budget: low\n" +
 			"stream: true\n")
 		mocktest.TestRunMockTestWithPipeAndFlags(
