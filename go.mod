@@ -1,4 +1,4 @@
-module github.com/stainless-sdks/handinger-cli
+module github.com/Ramensoft/handinger-cli
 
 go 1.25
 

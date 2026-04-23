@@ -5,7 +5,7 @@ package cmd
 import (
 	"testing"
 
-	"github.com/stainless-sdks/handinger-cli/internal/mocktest"
+	"github.com/Ramensoft/handinger-cli/internal/mocktest"
 )
 
 func TestWorkersSchedulesCreate(t *testing.T) {

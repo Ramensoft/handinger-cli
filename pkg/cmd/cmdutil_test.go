@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
 
-	"github.com/stainless-sdks/handinger-cli/internal/jsonview"
+	"github.com/Ramensoft/handinger-cli/internal/jsonview"
 )
 
 func TestStreamOutput(t *testing.T) {
