@@ -6,10 +6,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Ramensoft/handinger-go"
+	"github.com/Ramensoft/handinger-go/option"
 	"github.com/stainless-sdks/handinger-cli/internal/apiquery"
 	"github.com/stainless-sdks/handinger-cli/internal/requestflag"
-	"github.com/stainless-sdks/handinger-go"
-	"github.com/stainless-sdks/handinger-go/option"
 	"github.com/tidwall/gjson"
 	"github.com/urfave/cli/v3"
 )
