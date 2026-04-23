@@ -10,8 +10,8 @@ import (
 	"os"
 	"slices"
 
+	"github.com/Ramensoft/handinger-cli/pkg/cmd"
 	"github.com/Ramensoft/handinger-go"
-	"github.com/stainless-sdks/handinger-cli/pkg/cmd"
 	"github.com/tidwall/gjson"
 	"github.com/urfave/cli/v3"
 )

@@ -16,11 +16,11 @@ import (
 	"strings"
 	"unicode/utf8"
 
+	"github.com/Ramensoft/handinger-cli/internal/apiform"
+	"github.com/Ramensoft/handinger-cli/internal/apiquery"
+	"github.com/Ramensoft/handinger-cli/internal/debugmiddleware"
+	"github.com/Ramensoft/handinger-cli/internal/requestflag"
 	"github.com/Ramensoft/handinger-go/option"
-	"github.com/stainless-sdks/handinger-cli/internal/apiform"
-	"github.com/stainless-sdks/handinger-cli/internal/apiquery"
-	"github.com/stainless-sdks/handinger-cli/internal/debugmiddleware"
-	"github.com/stainless-sdks/handinger-cli/internal/requestflag"
 
 	"github.com/goccy/go-yaml"
 	"github.com/urfave/cli/v3"
