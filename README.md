@@ -50,7 +50,7 @@ handinger [resource] <command> [flags...]
 ```sh
 handinger workers create \
   --api-key 'My API Key' \
-  --input x
+  --input "What's the weather today in Barcelona?"
 ```
 
 For details about specific commands, use the `--help` flag.
