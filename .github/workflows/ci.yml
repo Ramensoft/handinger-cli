@@ -14,51 +14,68 @@ on:
       - 'stl-preview-head/**'
       - 'stl-preview-base/**'
 
+env:
+  GOPRIVATE: github.com/Ramensoft/handinger-go,github.com/stainless-sdks/handinger-go
+
 jobs:
   lint:
     timeout-minutes: 10
     name: lint
-    runs-on: ${{ github.repository == 'stainless-sdks/handinger-python' && 'depot-ubuntu-24.04' || 'ubuntu-latest' }}
+    runs-on: ${{ github.repository == 'stainless-sdks/handinger-cli' && 'depot-ubuntu-24.04' || 'ubuntu-latest' }}
     if: (github.event_name == 'push' || github.event.pull_request.head.repo.fork) && (github.event_name != 'push' || github.event.head_commit.message != 'codegen metadata')
+
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - uses: ./.github/actions/setup-go
         with:
-          version: '0.10.2'
+          stainless-api-key: ${{ secrets.STAINLESS_API_KEY }}
 
-      - name: Install dependencies
-        run: uv sync --all-extras
+      - name: Link staging branch
+        if: github.repository == 'stainless-sdks/handinger-cli'
+        run: |
+          ./scripts/link 'github.com/stainless-sdks/handinger-go@${{ github.ref_name }}' || true
+
+      - name: Bootstrap
+        run: ./scripts/bootstrap
 
       - name: Run lints
         run: ./scripts/lint
 
   build:
-    if: (github.event_name == 'push' || github.event.pull_request.head.repo.fork) && (github.event_name != 'push' || github.event.head_commit.message != 'codegen metadata')
     timeout-minutes: 10
     name: build
     permissions:
       contents: read
       id-token: write
-    runs-on: ${{ github.repository == 'stainless-sdks/handinger-python' && 'depot-ubuntu-24.04' || 'ubuntu-latest' }}
+    runs-on: ${{ github.repository == 'stainless-sdks/handinger-cli' && 'depot-ubuntu-24.04' || 'ubuntu-latest' }}
+    if: (github.event_name == 'push' || github.event.pull_request.head.repo.fork) && (github.event_name != 'push' || github.event.head_commit.message != 'codegen metadata')
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - uses: ./.github/actions/setup-go
         with:
-          version: '0.10.2'
+          stainless-api-key: ${{ secrets.STAINLESS_API_KEY }}
 
-      - name: Install dependencies
-        run: uv sync --all-extras
+      - name: Link staging branch
+        if: github.repository == 'stainless-sdks/handinger-cli'
+        run: |
+          ./scripts/link 'github.com/stainless-sdks/handinger-go@${{ github.ref_name }}' || true
 
-      - name: Run build
-        run: uv build
+      - name: Bootstrap
+        run: ./scripts/bootstrap
+
+      - name: Run goreleaser
+        uses: goreleaser/goreleaser-action@v6.1.0
+        with:
+          version: latest
+          args: release --snapshot --clean --skip=publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get GitHub OIDC Token
         if: |-
-          github.repository == 'stainless-sdks/handinger-python' &&
+          github.repository == 'stainless-sdks/handinger-cli' &&
           !startsWith(github.ref, 'refs/heads/stl/')
         id: github-oidc
         uses: actions/github-script@v8
@@ -67,7 +84,7 @@ jobs:
 
       - name: Upload tarball
         if: |-
-          github.repository == 'stainless-sdks/handinger-python' &&
+          github.repository == 'stainless-sdks/handinger-cli' &&
           !startsWith(github.ref, 'refs/heads/stl/')
         env:
           URL: https://pkg.stainless.com/s
@@ -78,15 +95,19 @@ jobs:
   test:
     timeout-minutes: 10
     name: test
-    runs-on: ${{ github.repository == 'stainless-sdks/handinger-python' && 'depot-ubuntu-24.04' || 'ubuntu-latest' }}
+    runs-on: ${{ github.repository == 'stainless-sdks/handinger-cli' && 'depot-ubuntu-24.04' || 'ubuntu-latest' }}
     if: github.event_name == 'push' || github.event.pull_request.head.repo.fork
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      - uses: ./.github/actions/setup-go
         with:
-          version: '0.10.2'
+          stainless-api-key: ${{ secrets.STAINLESS_API_KEY }}
+
+      - name: Link staging branch
+        if: github.repository == 'stainless-sdks/handinger-cli'
+        run: |
+          ./scripts/link 'github.com/stainless-sdks/handinger-go@${{ github.ref_name }}' || true
 
       - name: Bootstrap
         run: ./scripts/bootstrap
