@@ -94,7 +94,6 @@ func init() {
 					&workersContinue,
 					&workersRetrieveEmail,
 					&workersRetrieveFile,
-					&workersStreamUpdates,
 				},
 			},
 			{
