@@ -43,17 +43,12 @@ var workersCreate = cli.Command{
 
 var workersRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Retrieve the current worker state. Pass stream=true or request text/event-stream\nto subscribe to updates.",
+	Usage:   "Retrieve the current worker state and messages.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
 			Name:     "worker-id",
 			Required: true,
-		},
-		&requestflag.Flag[bool]{
-			Name:      "stream",
-			Usage:     "Return a server-sent event stream instead of JSON.",
-			QueryPath: "stream",
 		},
 	},
 	Action:          handleWorkersRetrieve,
@@ -127,24 +122,6 @@ var workersRetrieveFile = cli.Command{
 	HideHelpCommand: true,
 }
 
-var workersStreamUpdates = cli.Command{
-	Name:    "stream-updates",
-	Usage:   "Subscribe to a worker using server-sent events.",
-	Suggest: true,
-	Flags: []cli.Flag{
-		&requestflag.Flag[string]{
-			Name:     "worker-id",
-			Required: true,
-		},
-		&requestflag.Flag[int64]{
-			Name:  "max-items",
-			Usage: "The maximum number of items to return (use -1 for unlimited).",
-		},
-	},
-	Action:          handleWorkersStreamUpdates,
-	HideHelpCommand: true,
-}
-
 func handleWorkersCreate(ctx context.Context, cmd *cli.Command) error {
 	client := handinger.NewClient(getDefaultRequestOptions(cmd)...)
 	unusedArgs := cmd.Args().Slice()
@@ -197,8 +174,6 @@ func handleWorkersRetrieve(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := handinger.WorkerGetParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -212,12 +187,7 @@ func handleWorkersRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Workers.Get(
-		ctx,
-		cmd.Value("worker-id").(string),
-		params,
-		options...,
-	)
+	_, err = client.Workers.Get(ctx, cmd.Value("worker-id").(string), options...)
 	if err != nil {
 		return err
 	}
@@ -366,43 +336,4 @@ func handleWorkersRetrieveFile(ctx context.Context, cmd *cli.Command) error {
 		fmt.Println(message)
 	}
 	return err
-}
-
-func handleWorkersStreamUpdates(ctx context.Context, cmd *cli.Command) error {
-	client := handinger.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("worker-id") && len(unusedArgs) > 0 {
-		cmd.Set("worker-id", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		EmptyBody,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	format := cmd.Root().String("format")
-	explicitFormat := cmd.Root().IsSet("format")
-	transform := cmd.Root().String("transform")
-	stream := client.Workers.StreamUpdatesStreaming(ctx, cmd.Value("worker-id").(string), options...)
-	maxItems := int64(-1)
-	if cmd.IsSet("max-items") {
-		maxItems = cmd.Value("max-items").(int64)
-	}
-	return ShowJSONIterator(stream, maxItems, ShowJSONOpts{
-		ExplicitFormat: explicitFormat,
-		Format:         format,
-		RawOutput:      cmd.Root().Bool("raw-output"),
-		Title:          "workers stream-updates",
-		Transform:      transform,
-	})
 }

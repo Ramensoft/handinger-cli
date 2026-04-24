@@ -43,7 +43,6 @@ func TestWorkersRetrieve(t *testing.T) {
 			"--api-key", "string",
 			"workers", "retrieve",
 			"--worker-id", "t_org_123_w_01HZY2ZJQ8G7K42W2D7WF6V4GM",
-			"--stream=true",
 		)
 	})
 }
@@ -99,19 +98,6 @@ func TestWorkersRetrieveFile(t *testing.T) {
 			"--worker-id", "t_org_123_w_01HZY2ZJQ8G7K42W2D7WF6V4GM",
 			"--file-path", "scratchpad/plan.md",
 			"--output", "/dev/null",
-		)
-	})
-}
-
-func TestWorkersStreamUpdates(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
-	t.Run("regular flags", func(t *testing.T) {
-		mocktest.TestRunMockTestWithFlags(
-			t,
-			"--api-key", "string",
-			"workers", "stream-updates",
-			"--max-items", "10",
-			"--worker-id", "t_org_123_w_01HZY2ZJQ8G7K42W2D7WF6V4GM",
 		)
 	})
 }
