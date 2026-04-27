@@ -93,7 +93,6 @@ func init() {
 					&workersRetrieve,
 					&workersContinue,
 					&workersRetrieveEmail,
-					&workersRetrieveFile,
 				},
 			},
 			{

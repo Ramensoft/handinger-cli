@@ -5,7 +5,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/Ramensoft/handinger-cli/internal/apiquery"
 	"github.com/Ramensoft/handinger-cli/internal/requestflag"
@@ -17,7 +16,7 @@ import (
 
 var workersCreate = cli.Command{
 	Name:    "create",
-	Usage:   "Create a new agent worker and start it with the supplied instruction.",
+	Usage:   "Create a new agent worker and start it with the supplied instruction. Send\n`multipart/form-data` to attach files alongside the instruction; the bytes are\nbootstrapped into the worker's workspace before the first turn.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -43,12 +42,17 @@ var workersCreate = cli.Command{
 
 var workersRetrieve = cli.Command{
 	Name:    "retrieve",
-	Usage:   "Retrieve the current worker state and messages.",
+	Usage:   "Retrieve the current worker state and messages. Returns a JSON worker object by\ndefault, or a server-sent event stream when `stream=true`.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
 			Name:     "worker-id",
 			Required: true,
+		},
+		&requestflag.Flag[string]{
+			Name:      "stream",
+			Usage:     `Set to "true" to receive a server-sent event stream that replays all stored messages and then continues with live chunks from the active turn (if any) before closing.`,
+			QueryPath: "stream",
 		},
 	},
 	Action:          handleWorkersRetrieve,
@@ -57,7 +61,7 @@ var workersRetrieve = cli.Command{
 
 var workersContinue = cli.Command{
 	Name:    "continue",
-	Usage:   "Send another instruction to an existing worker.",
+	Usage:   "Send another instruction to an existing worker. Send `multipart/form-data` to\nattach additional files; the bytes are bootstrapped into the worker's workspace\nbefore the next turn.",
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
@@ -96,29 +100,6 @@ var workersRetrieveEmail = cli.Command{
 		},
 	},
 	Action:          handleWorkersRetrieveEmail,
-	HideHelpCommand: true,
-}
-
-var workersRetrieveFile = cli.Command{
-	Name:    "retrieve-file",
-	Usage:   "Retrieve a file published from a worker workspace. The runtime route accepts\nnested paths after /files/.",
-	Suggest: true,
-	Flags: []cli.Flag{
-		&requestflag.Flag[string]{
-			Name:     "worker-id",
-			Required: true,
-		},
-		&requestflag.Flag[string]{
-			Name:     "file-path",
-			Required: true,
-		},
-		&requestflag.Flag[string]{
-			Name:    "output",
-			Aliases: []string{"o"},
-			Usage:   "The file where the response contents will be stored. Use the value '-' to force output to stdout.",
-		},
-	},
-	Action:          handleWorkersRetrieveFile,
 	HideHelpCommand: true,
 }
 
@@ -174,6 +155,8 @@ func handleWorkersRetrieve(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
+	params := handinger.WorkerGetParams{}
+
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -187,7 +170,12 @@ func handleWorkersRetrieve(ctx context.Context, cmd *cli.Command) error {
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
-	_, err = client.Workers.Get(ctx, cmd.Value("worker-id").(string), options...)
+	_, err = client.Workers.Get(
+		ctx,
+		cmd.Value("worker-id").(string),
+		params,
+		options...,
+	)
 	if err != nil {
 		return err
 	}
@@ -294,46 +282,4 @@ func handleWorkersRetrieveEmail(ctx context.Context, cmd *cli.Command) error {
 		Title:          "workers retrieve-email",
 		Transform:      transform,
 	})
-}
-
-func handleWorkersRetrieveFile(ctx context.Context, cmd *cli.Command) error {
-	client := handinger.NewClient(getDefaultRequestOptions(cmd)...)
-	unusedArgs := cmd.Args().Slice()
-	if !cmd.IsSet("file-path") && len(unusedArgs) > 0 {
-		cmd.Set("file-path", unusedArgs[0])
-		unusedArgs = unusedArgs[1:]
-	}
-	if len(unusedArgs) > 0 {
-		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
-	}
-
-	params := handinger.WorkerGetFileParams{
-		WorkerID: cmd.Value("worker-id").(string),
-	}
-
-	options, err := flagOptions(
-		cmd,
-		apiquery.NestedQueryFormatBrackets,
-		apiquery.ArrayQueryFormatComma,
-		EmptyBody,
-		false,
-	)
-	if err != nil {
-		return err
-	}
-
-	response, err := client.Workers.GetFile(
-		ctx,
-		cmd.Value("file-path").(string),
-		params,
-		options...,
-	)
-	if err != nil {
-		return err
-	}
-	message, err := writeBinaryResponse(response, os.Stdout, cmd.String("output"))
-	if message != "" {
-		fmt.Println(message)
-	}
-	return err
 }
