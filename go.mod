@@ -3,7 +3,7 @@ module github.com/Ramensoft/handinger-cli
 go 1.25
 
 require (
-	github.com/Ramensoft/handinger-go v0.0.0-20260423083422-7bfd0332f283
+	github.com/Ramensoft/handinger-go v0.1.0
 	github.com/charmbracelet/bubbles v0.21.0
 	github.com/charmbracelet/bubbletea v1.3.6
 	github.com/charmbracelet/lipgloss v1.1.0
