@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1 (2026-04-30)
+
+Full Changelog: [v0.3.0...v0.3.1](https://github.com/Ramensoft/handinger-cli/compare/v0.3.0...v0.3.1)
+
+### Bug Fixes
+
+* **cli:** correctly load zsh autocompletion ([6859e78](https://github.com/Ramensoft/handinger-cli/commit/6859e7829549e59643985b6eb016ffb3aafac1fe))
+
 ## 0.3.0 (2026-04-27)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/Ramensoft/handinger-cli/compare/v0.2.0...v0.3.0)
