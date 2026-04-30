@@ -46,8 +46,9 @@ var workersRetrieve = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "worker-id",
-			Required: true,
+			Name:      "worker-id",
+			Required:  true,
+			PathParam: "workerId",
 		},
 		&requestflag.Flag[string]{
 			Name:      "stream",
@@ -65,8 +66,9 @@ var workersContinue = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "worker-id",
-			Required: true,
+			Name:      "worker-id",
+			Required:  true,
+			PathParam: "workerId",
 		},
 		&requestflag.Flag[string]{
 			Name:     "input",
@@ -95,8 +97,9 @@ var workersRetrieveEmail = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "worker-id",
-			Required: true,
+			Name:      "worker-id",
+			Required:  true,
+			PathParam: "workerId",
 		},
 	},
 	Action:          handleWorkersRetrieveEmail,
@@ -111,8 +114,6 @@ func handleWorkersCreate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := handinger.WorkerNewParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -123,6 +124,8 @@ func handleWorkersCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := handinger.WorkerNewParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -155,8 +158,6 @@ func handleWorkersRetrieve(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := handinger.WorkerGetParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -167,6 +168,8 @@ func handleWorkersRetrieve(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := handinger.WorkerGetParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -204,8 +207,6 @@ func handleWorkersContinue(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := handinger.WorkerContinueParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -216,6 +217,8 @@ func handleWorkersContinue(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := handinger.WorkerContinueParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))

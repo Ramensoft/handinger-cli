@@ -20,8 +20,9 @@ var workersSchedulesCreate = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "worker-id",
-			Required: true,
+			Name:      "worker-id",
+			Required:  true,
+			PathParam: "workerId",
 		},
 		&requestflag.Flag[string]{
 			Name:     "input",
@@ -50,8 +51,9 @@ var workersSchedulesList = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "worker-id",
-			Required: true,
+			Name:      "worker-id",
+			Required:  true,
+			PathParam: "workerId",
 		},
 	},
 	Action:          handleWorkersSchedulesList,
@@ -64,12 +66,14 @@ var workersSchedulesCancel = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "worker-id",
-			Required: true,
+			Name:      "worker-id",
+			Required:  true,
+			PathParam: "workerId",
 		},
 		&requestflag.Flag[string]{
-			Name:     "schedule-id",
-			Required: true,
+			Name:      "schedule-id",
+			Required:  true,
+			PathParam: "scheduleId",
 		},
 	},
 	Action:          handleWorkersSchedulesCancel,
@@ -87,8 +91,6 @@ func handleWorkersSchedulesCreate(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := handinger.WorkerScheduleNewParams{}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -99,6 +101,8 @@ func handleWorkersSchedulesCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
+
+	params := handinger.WorkerScheduleNewParams{}
 
 	var res []byte
 	options = append(options, option.WithResponseBodyInto(&res))
@@ -178,10 +182,6 @@ func handleWorkersSchedulesCancel(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("Unexpected extra arguments: %v", unusedArgs)
 	}
 
-	params := handinger.WorkerScheduleCancelParams{
-		WorkerID: cmd.Value("worker-id").(string),
-	}
-
 	options, err := flagOptions(
 		cmd,
 		apiquery.NestedQueryFormatBrackets,
@@ -191,6 +191,10 @@ func handleWorkersSchedulesCancel(ctx context.Context, cmd *cli.Command) error {
 	)
 	if err != nil {
 		return err
+	}
+
+	params := handinger.WorkerScheduleCancelParams{
+		WorkerID: cmd.Value("worker-id").(string),
 	}
 
 	var res []byte
