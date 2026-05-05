@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.0 (2026-05-05)
+
+Full Changelog: [v0.4.0...v0.5.0](https://github.com/Ramensoft/handinger-cli/compare/v0.4.0...v0.5.0)
+
+### Features
+
+* Le big refactor ([8a8106b](https://github.com/Ramensoft/handinger-cli/commit/8a8106b0c4e0f1d9541bb3b3ae5cbb421372e1bc))
+
+
+### Chores
+
+* **internal:** codegen related update ([adf9523](https://github.com/Ramensoft/handinger-cli/commit/adf95233b24ca03772726d7b30aa3283b2611cf8))
+
 ## 0.4.0 (2026-04-30)
 
 Full Changelog: [v0.3.2...v0.4.0](https://github.com/Ramensoft/handinger-cli/compare/v0.3.2...v0.4.0)
