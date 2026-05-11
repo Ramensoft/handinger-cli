@@ -50,6 +50,7 @@ handinger [resource] <command> [flags...]
 ```sh
 handinger tasks create \
   --api-key 'My API Key' \
+  --input "What's the weather today in Barcelona?" \
   --worker-id wrk_vk81XUHKHG-qr4
 ```
 
