@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.11.0 (2026-05-11)
+
+Full Changelog: [v0.10.0...v0.11.0](https://github.com/Ramensoft/handinger-cli/compare/v0.10.0...v0.11.0)
+
+### Features
+
+* Add Webhook API docs ([b683528](https://github.com/Ramensoft/handinger-cli/commit/b6835282c7c3c6a1c8b38e9b05b8333a1177c468))
+
 ## 0.10.0 (2026-05-11)
 
 Full Changelog: [v0.9.2...v0.10.0](https://github.com/Ramensoft/handinger-cli/compare/v0.9.2...v0.10.0)
