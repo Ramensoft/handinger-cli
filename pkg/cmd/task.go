@@ -6,10 +6,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Ramensoft/handinger-cli/internal/apiquery"
-	"github.com/Ramensoft/handinger-cli/internal/requestflag"
-	"github.com/Ramensoft/handinger-go"
-	"github.com/Ramensoft/handinger-go/option"
+	"github.com/ramensoft/handinger-cli/internal/apiquery"
+	"github.com/ramensoft/handinger-cli/internal/requestflag"
+	"github.com/ramensoft/handinger-go"
+	"github.com/ramensoft/handinger-go/option"
 	"github.com/tidwall/gjson"
 	"github.com/urfave/cli/v3"
 )
@@ -26,12 +26,13 @@ var tasksCreate = cli.Command{
 		},
 		&requestflag.Flag[string]{
 			Name:     "budget",
-			Usage:    `Allowed values: "low", "standard", "high", "unlimited".`,
+			Usage:    "Compute budget the worker is allowed to spend on the task. Defaults to `standard`.",
 			Default:  "standard",
 			BodyPath: "budget",
 		},
 		&requestflag.Flag[bool]{
 			Name:     "stream",
+			Usage:    "Stream the response as server-sent events instead of waiting for the final payload.",
 			Default:  false,
 			BodyPath: "stream",
 		},
