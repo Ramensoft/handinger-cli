@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.7.0 (2026-05-11)
+
+Full Changelog: [v0.6.0...v0.7.0](https://github.com/Ramensoft/handinger-cli/compare/v0.6.0...v0.7.0)
+
+### Features
+
+* Add JSON Schema output validation and structured display ([29d6ef7](https://github.com/Ramensoft/handinger-cli/commit/29d6ef788f1e5d8ead10ede4bcec3a4fa8245f42))
+* Add worker avatars and summaries with edit UI ([948d3aa](https://github.com/Ramensoft/handinger-cli/commit/948d3aa9f526935756f411bd7e651b894a4f5589))
+* **api:** api update ([1845ad0](https://github.com/Ramensoft/handinger-cli/commit/1845ad05ecbe13849290322af49c7c7f017a9a7a))
+* **api:** api update ([6f31b82](https://github.com/Ramensoft/handinger-cli/commit/6f31b82e7bfaacd59905bfc93ef4aebbbf52e32d))
+* Overhaul email/permissions and ids ([28b0077](https://github.com/Ramensoft/handinger-cli/commit/28b00777d5d329ebe72f966f944e129b0b390e82))
+
+
+### Chores
+
+* **internal:** codegen related update ([940794e](https://github.com/Ramensoft/handinger-cli/commit/940794e30f5fffcc683f47123e07b406a80f6605))
+* **internal:** codegen related update ([9fcc3d2](https://github.com/Ramensoft/handinger-cli/commit/9fcc3d20aed64592973cccb33198ff903151d93e))
+* redact api-key headers in debug logs ([090df15](https://github.com/Ramensoft/handinger-cli/commit/090df1535f30a6c27555384c9234df58eb5d6f77))
+
 ## 0.6.0 (2026-05-05)
 
 Full Changelog: [v0.5.0...v0.6.0](https://github.com/Ramensoft/handinger-cli/compare/v0.5.0...v0.6.0)
