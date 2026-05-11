@@ -20,39 +20,25 @@ var tasksCreate = cli.Command{
 	Suggest: true,
 	Flags: []cli.Flag{
 		&requestflag.Flag[string]{
-			Name:     "instructions",
-			Usage:    "Persistent system prompt the worker uses for every task it runs.",
-			BodyPath: "instructions",
-		},
-		&requestflag.Flag[map[string]any]{
-			Name:     "output-schema",
-			Usage:    "Optional JSON Schema (Draft-07) describing the structured object the worker must produce. When set, every task response is validated against the schema and exposed as `structuredOutput`.",
-			BodyPath: "outputSchema",
+			Name:     "input",
+			Required: true,
+			BodyPath: "input",
 		},
 		&requestflag.Flag[string]{
-			Name:     "prompt",
-			Usage:    "Natural-language description of the worker to use for AI-generated instructions when `instructions` is omitted.",
-			BodyPath: "prompt",
+			Name:     "budget",
+			Usage:    `Allowed values: "low", "standard", "high", "unlimited".`,
+			Default:  "standard",
+			BodyPath: "budget",
 		},
-		&requestflag.Flag[string]{
-			Name:     "summary",
-			Usage:    "Short one-line description of the worker's purpose. Auto-generated when omitted and a `prompt` is provided.",
-			BodyPath: "summary",
+		&requestflag.Flag[bool]{
+			Name:     "stream",
+			Default:  false,
+			BodyPath: "stream",
 		},
 		&requestflag.Flag[string]{
 			Name:     "task-id",
 			Usage:    "Optional client-provided task id. Reuse this id to add turns to an existing task.",
 			BodyPath: "taskId",
-		},
-		&requestflag.Flag[string]{
-			Name:     "title",
-			Usage:    "Optional display name. When omitted, Handinger assigns a random dog-themed name.",
-			BodyPath: "title",
-		},
-		&requestflag.Flag[string]{
-			Name:     "visibility",
-			Usage:    "`public` (default) is visible to all org members. `private` is only visible to invited members.",
-			BodyPath: "visibility",
 		},
 		&requestflag.Flag[string]{
 			Name:     "worker-id",
